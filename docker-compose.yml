@@ -20,7 +20,7 @@ services:
     links: 
             - db:db
     expose:
-      - "40001"
+      - "80"
     ports:
       - "80:80"
     environment:
