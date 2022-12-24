@@ -1,36 +1,29 @@
-version: '3'
+version: '3.1'
+
 services:
-  mariadb:
+
+  db:
     image: mariadb
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER:  user
-      MYSQL_PASSWORD: root
-    expose:
-        - "40000"
-    ports:
-        - "40000:3306"
-    volumes:
-     - mariadb:/var/lib/mysql
-    networks:
-      db:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    
+    volumes: 
+        - ./init:/docker-entrypoint-initdb.d
 
   phpmyadmin:
     image: phpmyadmin
     restart: always
+    links: 
+            - db:db
     expose:
       - "40001"
     ports:
-      - "40001:80"
+      - "80:80"
     environment:
-      - PMA_HOST=mariadb
-      - PMA_PORT=3306 
-    networks:
-      db:
-volumes:
-  mariadb:
-    driver: local
-networks:
-    db:
-        driver: bridge
+            MYSQL_USER: user
+            MYSQL_PASSWORD: user
+            MYSQL_ROOT_PASSWORD: user
